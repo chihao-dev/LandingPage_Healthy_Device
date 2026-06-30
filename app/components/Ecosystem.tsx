@@ -16,7 +16,8 @@ export default function Ecosystem() {
     // Lấy dữ liệu từ API riêng biệt (BA-WAY)
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/products');
+        const apiBase = process.env.NEXT_PUBLIC_API_URL;
+        const res = await fetch(`${apiBase}/api/products`);
         const data = await res.json();
         setProducts(data);
       } catch (error) {
