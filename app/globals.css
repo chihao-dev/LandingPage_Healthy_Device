@@ -1,8 +1,28 @@
+/* BA-WAY OPTIMIZED CSS */
 @import "tailwindcss";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* Hide Next.js DevTools / Indicators / Toasts */
+#devtools-indicator,
+[data-nextjs-toast],
+[data-next-badge-root],
+.nextjs-toast {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+/* Force dark mode by default for deep scrollytelling if needed,
+   but here we follow the script which specifies dark backgrounds */
+.dark {
+  --background: #020617; /* Deep dark slate */
+  --foreground: #f8fafc;
 }
 
 @theme inline {
@@ -12,15 +32,185 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* BA-WAY ENHANCEMENTS */
+
+/* Toast Animation */
+.toast-enter {
+  animation: toast-in 0.3s ease-out forwards;
+}
+
+@keyframes toast-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* 1. Scroll Animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 2. Particle Effect (Basic CSS) */
+.particle-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: drift var(--duration) linear infinite;
+}
+
+@keyframes drift {
+  from { transform: translateY(0) translateX(0); }
+  to { transform: translateY(-100vh) translateX(var(--x-drift)); }
+}
+
+/* 3. Ripple Effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.btn-ripple:hover::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% { transform: scale(0, 0); opacity: 0.5; }
+  100% { transform: scale(40, 40); opacity: 0; }
+}
+
+/* 4. Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.dark .glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 5. Exploded View (Simplified) */
+.filter-layer {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.group:hover .filter-layer-1 { transform: translateY(-20px); }
+.group:hover .filter-layer-2 { transform: translateY(-40px); }
+.group:hover .filter-layer-3 { transform: translateY(-60px); }
+
+/* 2. Skeleton Loading */
+.skeleton-card {
+  height: 120px;
+  border-radius: 16px;
+  background: linear-gradient(
+    90deg,
+    #f3f4f6 25%,
+    #e5e7eb 37%,
+    #f3f4f6 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton 1.4s ease infinite;
+}
+
+@keyframes skeleton {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+/* 3. Micro-interactions */
+.btn-interaction {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-interaction:hover {
+  transform: translateY(-2px);
+}
+
+.btn-interaction:active {
+  transform: scale(0.97);
+}
+
+.input-interaction {
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-interaction:focus {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+/* 4. Scroll Progress */
+#scrollProgress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: #2563eb;
+  width: 0%;
+  z-index: 9999;
+}
+
+/* 5. Parallax Effect */
+.parallax-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  background-image: url('https://images.unsplash.com/photo-1510017803434-a899398421b3?q=80&w=2000&auto=format&fit=crop');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.05;
+  will-change: transform;
 }

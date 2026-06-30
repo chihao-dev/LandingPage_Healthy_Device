@@ -1,0 +1,3 @@
+@newWorkspace Use the rules RULE BA TASK.txt.
+Read SYSTEM_OVERVIEW.txt and SYSTEM_ANALYSIS.txt.
+Generate describing BA for task ....
