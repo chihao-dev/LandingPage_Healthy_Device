@@ -1,0 +1,16 @@
+export const STRINGS = {
+  error_invalid_email: "Vui lòng nhập email hợp lệ",
+  success_webhook_message: (name: string) => `✅ Hồ sơ ${name} lưu Webhook thành công!`,
+  error_api_failed: "API failed",
+  error_submission: "Submission error:",
+  label_name: "Họ và tên",
+  label_phone: "Số điện thoại",
+  label_email: "Email của bạn",
+  placeholder_name: "Ví dụ: Nguyễn Văn A",
+  placeholder_phone: "09xx xxx xxx",
+  placeholder_email: "example@email.com",
+  status_loading: "Đang xử lý...",
+  btn_submit: "Gửi yêu cầu chuyên gia",
+  msg_success: "🎉 Cảm ơn bạn! Yêu cầu đã được gửi thành công. Chuyên gia sẽ liên hệ sớm.",
+  msg_error: "❌ Rất tiếc, đã có lỗi xảy ra. Vui lòng thử lại sau.",
+} as const;
