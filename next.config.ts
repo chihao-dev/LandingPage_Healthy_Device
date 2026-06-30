@@ -13,11 +13,6 @@ const nextConfig: NextConfig = {
         hostname: 'i.postimg.cc',
         pathname: '/**',
       },
-      {
-        protocol: 'https',
-        hostname: 'i.imgur.com',
-        pathname: '/**',
-      },
     ],
   },
   devIndicators: false,

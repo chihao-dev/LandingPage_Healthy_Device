@@ -97,7 +97,7 @@ export default function Chatbot() {
             </div>
 
             {messages.map((msg, idx) => (
-              <div key={msg.id} className={`flex flex-col ${msg.type === 'user' ? 'items-end' : 'items-start'} reveal-chat`}>
+              <div key={msg.id} className={`flex flex-col ${msg.type === 'user' ? 'items-end' : 'items-start'}`}>
                 <div className={`px-4 py-3 rounded-2xl max-w-[90%] text-sm leading-relaxed shadow-sm ${
                   msg.type === 'user' 
                     ? 'bg-blue-600 text-white rounded-br-none font-medium'

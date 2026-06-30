@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { imageAssets } from '../constants/assets';
 
 export default function Ecosystem() {
   const [viewed, setViewed] = useState<string[]>([]);
