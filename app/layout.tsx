@@ -34,9 +34,11 @@ export const metadata: Metadata = {
   },
 };
 
-import ThemeToggle from "./components/ThemeToggle";
-import BehaviorToast from "./components/BehaviorToast";
-import Chatbot from "./components/Chatbot";
+import dynamic from "next/dynamic";
+
+const ThemeToggle = dynamic(() => import("./components/ThemeToggle"), { ssr: false });
+const BehaviorToast = dynamic(() => import("./components/BehaviorToast"), { ssr: false });
+const Chatbot = dynamic(() => import("./components/Chatbot"), { ssr: false });
 
 export default function RootLayout({
   children,

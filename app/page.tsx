@@ -40,36 +40,45 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-[#050510] text-slate-900 dark:text-slate-100 font-sans scroll-smooth transition-colors duration-500 overflow-x-hidden selection:bg-blue-500/30 relative">
-      <div className="parallax-wrapper pointer-events-none">
-        <div className="parallax-bg"></div>
+      <div className="parallax-wrapper pointer-events-none opacity-5">
+        <div className="parallax-bg relative w-full h-full">
+          <Image
+            src="https://images.unsplash.com/photo-1510017803434-a899398421b3?q=80&w=2000"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority={false}
+          />
+        </div>
       </div>
       <Navbar />
       <PageEffects />
 
       {/* SECTION 1: HERO */}
       <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden pt-24 bg-slate-100 dark:bg-[#050510]">
-        <Particles count={60} />
+        <Particles count={30} />
         <div className="absolute inset-0 dark:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] dark:from-blue-900/30 dark:via-[#050510] dark:to-[#050510] pointer-events-none" />
         <div className="absolute top-1/4 left-1/4 w-[30rem] h-[30rem] bg-blue-500/10 dark:bg-blue-600/20 rounded-full blur-[128px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-indigo-500/10 dark:bg-indigo-600/20 rounded-full blur-[128px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
 
         <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center">
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 backdrop-blur-md mb-8 reveal active shadow-xl">
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-slate-200/80 dark:bg-white/5 border border-slate-300 dark:border-white/10 backdrop-blur-md mb-8 shadow-xl">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
             <span className="text-xs font-semibold text-blue-700 dark:text-blue-200 tracking-[0.2em] uppercase">Thế Hệ Bảo Vệ 2.0</span>
           </div>
           
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.1] reveal active text-slate-900 dark:text-white">
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter mb-8 leading-[1.1] text-slate-900 dark:text-white">
             Không khí bạn <br className="hidden md:block"/>hít thở <br className="md:hidden"/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-600 drop-shadow-sm">có thực sự sạch?</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-500 dark:text-slate-300/80 mb-12 max-w-3xl mx-auto leading-relaxed font-light reveal active delay-100">
+          <p className="text-xl md:text-2xl text-slate-500 dark:text-slate-300/80 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             99% hiểm họa trong nhà không thể nhìn thấy bằng mắt thường. 
             <br className="hidden md:block"/> Khai phóng sự thật với công nghệ màng lọc lượng tử AI.
           </p>
           
-          <div className="flex flex-col sm:flex-row items-center gap-6 justify-center reveal active delay-200">
+          <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
             <button 
               onClick={() => window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `🔍 Bạn đã bắt đầu hành trình Khám phá` } }))}
               className="relative group px-10 py-5 rounded-full text-lg font-bold bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-100 transition-all duration-300 hover:scale-105 shadow-lg btn-interaction btn-ripple"
@@ -86,7 +95,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-28 relative w-full h-[600px] flex items-end justify-center reveal active delay-300 group">
+        <div className="mt-28 relative w-full h-[600px] flex items-end justify-center group">
            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500/20 rounded-full blur-[80px] group-hover:bg-blue-400/30 transition-all duration-1000" />
            <div className="relative w-[500px] h-full z-10">
               <Image 

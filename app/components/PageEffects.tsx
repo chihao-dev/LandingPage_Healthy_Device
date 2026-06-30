@@ -20,24 +20,13 @@ export default function PageEffects() {
 
     reveals.forEach((el) => observer.observe(el));
 
-    // 2. Scroll Progress Bar & Parallax
-    const progressLine = document.getElementById('scrollProgress');
-    const parallaxBg = document.querySelector('.parallax-bg') as HTMLElement;
-    
-    // Store seen sections to prevent spamming
+    // 2. Section Tracking (Optimized with IntersectionObserver)
     const seenSections = new Set<string>();
-
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.body.scrollHeight - window.innerHeight;
-
-      // Behavior tracking: Scroll to sections
-      const sections = ['problem', 'solution', 'realtime-data', 'register'];
-      sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && !seenSections.has(id)) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top >= 0 && rect.top <= 200) {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !seenSections.has(entry.target.id)) {
+            const id = entry.target.id;
             seenSections.add(id);
             let sectionName = '';
             switch(id) {
@@ -46,10 +35,29 @@ export default function PageEffects() {
               case 'realtime-data': sectionName = 'Dữ liệu thời gian thực'; break;
               case 'register': sectionName = 'Đăng ký tư vấn'; break;
             }
-            window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `📍 Bạn đăm xem: ${sectionName}` }}));
+            if (sectionName) {
+              window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `📍 Bạn đang xem: ${sectionName}` }}));
+            }
           }
-        }
-      });
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const sections = ['problem', 'solution', 'realtime-data', 'register'];
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) sectionObserver.observe(el);
+    });
+
+    // 3. Scroll Progress Bar & Parallax (Throttled with requestAnimationFrame)
+    const progressLine = document.getElementById('scrollProgress');
+    const parallaxBg = document.querySelector('.parallax-bg') as HTMLElement;
+
+    let ticking = false;
+    const updateScrollEffects = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
 
       // Progress calculation
       const progress = (scrollTop / docHeight) * 100;
@@ -57,16 +65,26 @@ export default function PageEffects() {
         progressLine.style.width = `${progress}%`;
       }
 
-      // Parallax calculation (0.2 golden ratio)
+      // Parallax calculation
       if (parallaxBg) {
         parallaxBg.style.transform = `translateY(${scrollTop * 0.2}px)`;
       }
+
+      ticking = false;
     };
 
-    window.addEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateScrollEffects);
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       observer.disconnect();
+      sectionObserver.disconnect();
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
