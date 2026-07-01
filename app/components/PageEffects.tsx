@@ -20,31 +20,60 @@ export default function PageEffects() {
 
     reveals.forEach((el) => observer.observe(el));
 
-    // 2. Section Tracking (Optimized with IntersectionObserver)
-    const seenSections = new Set<string>();
+    // 2. Section Tracking (Cải tiến để mượt mà và chính xác hơn)
+    let lastActiveSection = '';
+    const sectionVisibility = new Map<string, number>();
+
+    const updateActiveSection = (activeId: string) => {
+      if (activeId && activeId !== lastActiveSection) {
+        lastActiveSection = activeId;
+        let sectionName = '';
+        switch(activeId) {
+          case 'hero': sectionName = 'Trang chủ'; break;
+          case 'problem': sectionName = 'Thách thức sức khỏe'; break;
+          case 'solution': sectionName = 'Giải pháp AirPure X'; break;
+          case 'technology': sectionName = 'Công nghệ AI'; break;
+          case 'realtime-data': sectionName = 'Dữ liệu thời gian thực'; break;
+          case 'specs': sectionName = 'Thông số kỹ thuật'; break;
+          case 'ecosystem': sectionName = 'Hệ sinh thái thông minh'; break;
+          case 'register': sectionName = 'Đăng ký tư vấn'; break;
+        }
+
+        if (sectionName) {
+          window.dispatchEvent(new CustomEvent('behavior-event', {
+            detail: { message: `📍 Bạn đang ở: ${sectionName}` }
+          }));
+        }
+      }
+    };
+
     const sectionObserver = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !seenSections.has(entry.target.id)) {
-            const id = entry.target.id;
-            seenSections.add(id);
-            let sectionName = '';
-            switch(id) {
-              case 'problem': sectionName = 'Thách thức'; break;
-              case 'solution': sectionName = 'Giải pháp'; break;
-              case 'realtime-data': sectionName = 'Dữ liệu thời gian thực'; break;
-              case 'register': sectionName = 'Đăng ký tư vấn'; break;
-            }
-            if (sectionName) {
-              window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `📍 Bạn đang xem: ${sectionName}` }}));
-            }
+        entries.forEach(entry => {
+          sectionVisibility.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
+
+        let maxRatio = 0;
+        let activeId = '';
+
+        sectionVisibility.forEach((ratio, id) => {
+          if (ratio > maxRatio) {
+            maxRatio = ratio;
+            activeId = id;
           }
         });
+
+        if (maxRatio > 0.15) {
+          updateActiveSection(activeId);
+        }
       },
-      { threshold: 0.2 }
+      {
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+        rootMargin: '-10% 0px -10% 0px'
+      }
     );
 
-    const sections = ['problem', 'solution', 'realtime-data', 'register'];
+    const sections = ['hero', 'problem', 'solution', 'technology', 'realtime-data', 'specs', 'ecosystem', 'register'];
     sections.forEach(id => {
       const el = document.getElementById(id);
       if (el) sectionObserver.observe(el);
