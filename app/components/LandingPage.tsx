@@ -294,12 +294,12 @@ export default function LandingPage({ ecosystemComponent }: LandingPageProps) {
               { color: 'emerald', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', title: 'Bảo vệ toàn diện', desc: 'Chấm dứt nỗi lo dị ứng, viêm mũi nhờ cảm biến nhận diện siêu bụi và vi khuẩn độc lập.' },
               { color: 'purple', icon: 'M5.52 19c.64-1.5 1.84-2.53 3.48-2.53h6c1.64 0 2.84 1.03 3.48 2.53M12 11a4 4 0 100-8 4 4 0 000 8z', title: 'Siêu tĩnh lặng', desc: 'Động cơ không chổi than từ tính vận hành dưới mức 20dB - êm ái hơn cả một tiếng rơi của lá.' },
             ].map((item, i) => (
-              <div key={i} className={`reveal bg-white dark:glass p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group ${i > 0 ? `delay-${i}00` : ''}`}>
-                <div className={`w-16 h-16 rounded-2xl bg-${item.color}-500/10 dark:bg-${item.color}-500/20 text-${item.color}-500 dark:text-${item.color}-400 flex items-center justify-center mb-8 border border-${item.color}-500/20 group-hover:scale-110 transition-transform`}>
+              <div key={i} className={`reveal bg-slate-50 dark:bg-white/[0.03] p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-slate-200 dark:border-white/10 hover:bg-white dark:hover:bg-white/5 hover:shadow-xl dark:hover:shadow-blue-500/5 transition-all duration-300 group ${i > 0 ? `delay-${i}00` : ''}`}>
+                <div className={`w-16 h-16 rounded-2xl bg-${item.color}-500/10 dark:bg-${item.color}-500/20 text-${item.color}-600 dark:text-${item.color}-400 flex items-center justify-center mb-8 border border-${item.color}-500/20 group-hover:scale-110 transition-transform`}>
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={item.icon} /></svg>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{item.title}</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed">{item.desc}</p>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4">{item.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
