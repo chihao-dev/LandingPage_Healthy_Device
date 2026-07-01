@@ -27,13 +27,21 @@ export default function Chatbot() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Persistence: Load data from localStorage on mount
-  useEffect(() => {
+  const syncStorage = () => {
     const savedCart = localStorage.getItem('chatbot_cart');
     const savedFavs = localStorage.getItem('chatbot_favs');
     const savedHistory = localStorage.getItem('chatbot_history');
     if (savedCart) setCart(JSON.parse(savedCart));
     if (savedFavs) setFavorites(JSON.parse(savedFavs));
     if (savedHistory) setViewedProducts(JSON.parse(savedHistory));
+  };
+
+  useEffect(() => {
+    syncStorage();
+
+    // Listen for updates from other components
+    window.addEventListener('storage-update', syncStorage);
+    return () => window.removeEventListener('storage-update', syncStorage);
   }, []);
 
   // Persistence: Save data to localStorage when state changes
@@ -62,32 +70,51 @@ export default function Chatbot() {
   }, [messages, activeTab]);
 
   const addToCart = (product: Product) => {
-    setCart(prev => {
-      const existing = prev.find(item => item.name === product.name);
-      if (existing) {
-        return prev.map(item => item.name === product.name ? { ...item, quantity: item.quantity + 1 } : item);
-      }
-      return [...prev, { ...product, quantity: 1 }];
-    });
+    const currentCart = JSON.parse(localStorage.getItem('chatbot_cart') || '[]');
+    const existing = currentCart.find((item: any) => item.name === product.name);
+    let newCart;
+    if (existing) {
+      newCart = currentCart.map((item: any) =>
+        item.name === product.name ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      newCart = [...currentCart, { ...product, quantity: 1 }];
+    }
+    setCart(newCart);
+    localStorage.setItem('chatbot_cart', JSON.stringify(newCart));
+    window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `🛒 Đã thêm 1 x ${product.name} vào giỏ !` } }));
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   const removeFromCart = (name: string) => {
-    setCart(prev => prev.filter(item => item.name !== name));
+    const currentCart = JSON.parse(localStorage.getItem('chatbot_cart') || '[]');
+    const newCart = currentCart.filter((item: any) => item.name !== name);
+    setCart(newCart);
+    localStorage.setItem('chatbot_cart', JSON.stringify(newCart));
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   const toggleFavorite = (product: Product) => {
-    setFavorites(prev => {
-      const isFav = prev.some(item => item.name === product.name);
-      if (isFav) return prev.filter(item => item.name !== product.name);
-      return [...prev, product];
-    });
+    const currentFavs = JSON.parse(localStorage.getItem('chatbot_favs') || '[]');
+    const isFav = currentFavs.some((item: any) => item.name === product.name);
+    let newFavs;
+    if (isFav) {
+      newFavs = currentFavs.filter((item: any) => item.name !== product.name);
+    } else {
+      newFavs = [...currentFavs, product];
+    }
+    setFavorites(newFavs);
+    localStorage.setItem('chatbot_favs', JSON.stringify(newFavs));
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   const trackView = (product: Product) => {
     setViewedProducts(prev => {
       const filtered = prev.filter(p => p.name !== product.name);
-      return [product, ...filtered].slice(0, 10);
+      const newHistory = [product, ...filtered].slice(0, 10);
+      return newHistory;
     });
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   const loadNode = async (node: string, userText?: string) => {
@@ -98,23 +125,26 @@ export default function Chatbot() {
     setLoading(true);
     setActiveTab('chat');
     try {
-      const apiBase = (process.env.NEXT_PUBLIC_API_URL || '').replace(/\/$/, '');
-      const res = await fetch(`${apiBase}/api/chat`, {
+      const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ node })
       });
 
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      setMessages(p => [...p, { 
+
+      const botMessage: ChatMessage = {
         id: Date.now().toString() + 'b',
         type: 'bot', 
-        text: data.text, 
-        options: data.options,
-        products: data.products 
-      }]);
+        text: data.text || 'Xin lỗi, tôi không hiểu ý bạn.',
+        options: data.options || [],
+        products: data.products || []
+      };
 
-      if (data.products && data.products.length > 0) {
+      setMessages(p => [...p, botMessage]);
+
+      if (data.products && Array.isArray(data.products)) {
         data.products.forEach((p: Product) => trackView(p));
       }
     } catch (error) {
@@ -168,31 +198,68 @@ export default function Chatbot() {
 
   return (
     <>
-      {/* Floating Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-24 right-8 z-[9999] w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform"
-      >
-        {isOpen ? (
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+      {/* Floating Buttons Group */}
+      <div className="fixed bottom-6 right-4 sm:bottom-10 sm:right-8 z-[9999] flex flex-col gap-3 sm:gap-4 items-center">
+        {/* Favorites Button */}
+        <button
+          onClick={() => {
+            setIsOpen(true);
+            setActiveTab('favorites');
+          }}
+          className="w-11 h-11 sm:w-12 sm:h-12 bg-white dark:bg-[#1a1a2e] text-red-500 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform border border-zinc-100 dark:border-white/10 relative group"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill={favorites.length > 0 ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
-        ) : (
-          <div className="relative">
+          {favorites.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-[8px] sm:text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              {favorites.length}
+            </span>
+          )}
+          <span className="hidden sm:block absolute right-14 px-2 py-1 bg-zinc-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Yêu thích</span>
+        </button>
+
+        {/* Cart Button */}
+        <button
+          onClick={() => {
+            setIsOpen(true);
+            setActiveTab('cart');
+          }}
+          className="w-11 h-11 sm:w-12 sm:h-12 bg-white dark:bg-[#1a1a2e] text-blue-600 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform border border-zinc-100 dark:border-white/10 relative group"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          {cart.length > 0 && (
+            <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[8px] sm:text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-pulse">
+              {cart.reduce((a, b) => a + b.quantity, 0)}
+            </span>
+          )}
+          <span className="hidden sm:block absolute right-14 px-2 py-1 bg-zinc-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Giỏ hàng</span>
+        </button>
+
+        {/* Main Chat Toggle Button */}
+        <button
+          onClick={() => {
+            setIsOpen(!isOpen);
+            if (!isOpen) setActiveTab('chat');
+          }}
+          className="w-14 h-14 bg-blue-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform"
+        >
+          {isOpen ? (
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
             </svg>
-            {cart.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center animate-bounce">
-                {cart.reduce((a, b) => a + b.quantity, 0)}
-              </span>
-            )}
-          </div>
-        )}
-      </button>
+          )}
+        </button>
+      </div>
 
       {isOpen && (
-        <div className="fixed bottom-40 right-8 z-[9999] w-85 h-[600px] bg-white dark:bg-[#0a0a15] border border-zinc-200 dark:border-white/10 rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-6 duration-300">
+        <div className="fixed inset-0 sm:inset-auto sm:bottom-28 sm:right-8 z-[9999] w-full sm:w-[400px] h-full sm:h-[600px] bg-white dark:bg-[#0a0a15] border-t sm:border border-zinc-200 dark:border-white/10 rounded-none sm:rounded-3xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-full sm:slide-in-from-bottom-6 duration-300">
           {/* Header */}
           <div className="p-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex justify-between items-center shadow-lg">
             <div className="flex items-center gap-3">
