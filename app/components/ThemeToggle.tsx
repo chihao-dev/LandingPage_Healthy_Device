@@ -35,7 +35,7 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       className="fixed bottom-6 left-4 sm:bottom-8 sm:left-8 z-[9999] p-3 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-full shadow-lg hover:scale-110 transition-all active:scale-95 text-lg"
-      aria-label="Toggle Theme"
+      aria-label={isDark ? "Chuyển sang chế độ sáng" : "Chuyển sang chế độ tối"}
     >
       {isDark ? '☀️' : '🌙'}
     </button>

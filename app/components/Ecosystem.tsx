@@ -85,6 +85,7 @@ export default function Ecosystem({ initialProducts = [] }: EcosystemProps) {
       <button
         onClick={() => scroll('left')}
         className="absolute left-2 md:left-0 top-1/2 -translate-y-1/2 md:-translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-xl border border-slate-200 dark:border-white/10 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover/ecosystem:opacity-100 transition-all hover:scale-110 active:scale-95 text-slate-600 dark:text-slate-300 backdrop-blur-sm"
+        aria-label="Xem sản phẩm trước"
       >
         <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
       </button>
@@ -92,6 +93,7 @@ export default function Ecosystem({ initialProducts = [] }: EcosystemProps) {
       <button
         onClick={() => scroll('right')}
         className="absolute right-2 md:right-0 top-1/2 -translate-y-1/2 md:translate-x-4 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-xl border border-slate-200 dark:border-white/10 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover/ecosystem:opacity-100 transition-all hover:scale-110 active:scale-95 text-slate-600 dark:text-slate-300 backdrop-blur-sm"
+        aria-label="Xem sản phẩm tiếp theo"
       >
         <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
       </button>
