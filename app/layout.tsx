@@ -34,11 +34,7 @@ export const metadata: Metadata = {
   },
 };
 
-import dynamic from "next/dynamic";
-
-const ThemeToggle = dynamic(() => import("./components/ThemeToggle"), { ssr: false });
-const BehaviorToast = dynamic(() => import("./components/BehaviorToast"), { ssr: false });
-const Chatbot = dynamic(() => import("./components/Chatbot"), { ssr: false });
+import ClientWrapper from "./components/ClientWrapper";
 
 export default function RootLayout({
   children,
@@ -53,9 +49,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-white dark:bg-[#050510] text-slate-900 dark:text-white transition-colors duration-300">
         {children}
-        <ThemeToggle />
-        <BehaviorToast />
-        <Chatbot />
+        <ClientWrapper />
       </body>
     </html>
   );
