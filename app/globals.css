@@ -199,6 +199,15 @@ body {
   z-index: 9999;
 }
 
+/* 4.5 Hide Scrollbar Utility */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* 5. Parallax Effect */
 .parallax-wrapper {
   position: absolute;

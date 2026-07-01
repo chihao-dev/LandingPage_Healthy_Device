@@ -7,9 +7,15 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const theme = localStorage.getItem('theme');
-    if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Mặc định là light, chỉ chuyển sang dark nếu đã lưu trong localStorage là 'dark'
+    if (theme === 'dark') {
       document.documentElement.classList.add('dark');
       setIsDark(true);
+    } else {
+      document.documentElement.classList.remove('dark');
+      setIsDark(false);
+      // Nếu chưa có theme trong localStorage, mặc định chọn light
+      if (!theme) localStorage.setItem('theme', 'light');
     }
   }, []);
 
