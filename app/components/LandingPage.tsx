@@ -85,17 +85,23 @@ export default function LandingPage({ ecosystemComponent }: LandingPageProps) {
 
           <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
             <button
-              onClick={() => window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `🔍 Bạn đã bắt đầu hành trình Khám phá` } }))}
-              className="relative group px-10 py-5 rounded-full text-lg font-bold bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-slate-800 dark:hover:bg-slate-100 transition-all duration-300 hover:scale-105 shadow-lg btn-interaction btn-ripple"
+              onClick={() => {
+                document.getElementById('problem')?.scrollIntoView({ behavior: 'smooth' });
+                window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `🔍 Bắt đầu hành trình khám phá` } }));
+              }}
+              className="relative group px-10 py-5 rounded-full text-lg font-bold bg-slate-900 dark:bg-white text-white dark:text-black hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white transition-all duration-300 hover:scale-105 shadow-xl btn-interaction btn-ripple"
             >
               Khám Phá Ngay
             </button>
             <button
-              onClick={() => window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `⚡ Tiến hành Quét độ chuẩn không khí...` } }))}
-              className="px-10 py-5 rounded-full text-lg font-bold text-slate-900 dark:text-white relative transition-all duration-300 border border-slate-300 dark:border-white/10 hover:bg-slate-200 dark:hover:bg-white/5 backdrop-blur-sm group overflow-hidden"
+              onClick={() => {
+                document.getElementById('realtime-data')?.scrollIntoView({ behavior: 'smooth' });
+                window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `⚡ Đang quét dữ liệu không khí...` } }));
+              }}
+              className="px-10 py-5 rounded-full text-lg font-bold text-slate-900 dark:text-white relative transition-all duration-300 border-2 border-slate-300 dark:border-white/10 hover:border-blue-500 dark:hover:border-blue-400 backdrop-blur-sm group overflow-hidden"
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:scale-105 inline-block">Quét Không Khí</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </button>
           </div>
         </div>

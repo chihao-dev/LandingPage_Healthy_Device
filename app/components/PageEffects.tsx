@@ -63,13 +63,13 @@ export default function PageEffects() {
           }
         });
 
-        if (maxRatio > 0.15) {
+        if (maxRatio > 0.1) {
           updateActiveSection(activeId);
         }
       },
       {
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-        rootMargin: '-10% 0px -10% 0px'
+        threshold: [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
+        rootMargin: '-5% 0px -5% 0px'
       }
     );
 
@@ -88,8 +88,13 @@ export default function PageEffects() {
       const scrollTop = window.scrollY;
       const docHeight = document.body.scrollHeight - window.innerHeight;
 
+      // Force "Trang chủ" when at the very top
+      if (scrollTop < 50) {
+        updateActiveSection('hero');
+      }
+
       // Progress calculation
-      const progress = (scrollTop / docHeight) * 100;
+      const progress = (scrollTop / (docHeight || 1)) * 100;
       if (progressLine) {
         progressLine.style.width = `${progress}%`;
       }
