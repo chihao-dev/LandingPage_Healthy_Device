@@ -277,7 +277,7 @@ export default function Home() {
       {/* SECTION 6: BENEFITS */}
       <section className="py-40 px-6 bg-white dark:bg-[#020205] relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 dark:opacity-30 mix-blend-luminosity">
-          <Image src="https://images.unsplash.com/photo-1541781719201-68bca2ff36d4?q=80&w=2000" alt="Relaxing" fill sizes="100vw" className="object-cover" />
+          <Image src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000" alt="Relaxing" fill sizes="100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900 dark:from-[#020205] via-slate-900/80 dark:via-[#020205]/80 to-transparent" />
         </div>
         <div className="max-w-6xl mx-auto relative z-10 flex flex-col items-start gap-12">

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: "AirPure Tech",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1541781719201-68bca2ff36d4?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop",
         width: 1200,
         height: 630,
         alt: "AirPure X Ecosystem",

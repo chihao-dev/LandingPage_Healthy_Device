@@ -2,30 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useEcommerce } from '@/hooks/useEcommerce';
+import { Product } from '@/lib/types';
 
 export default function Ecosystem() {
-  const [viewed, setViewed] = useState<any[]>([]);
-  const [favorites, setFavorites] = useState<any[]>([]);
-  const [cart, setCart] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const syncStorage = () => {
-    const storedHistory = localStorage.getItem('chatbot_history');
-    const storedFavs = localStorage.getItem('chatbot_favs');
-    const storedCart = localStorage.getItem('chatbot_cart');
-
-    if (storedHistory) setViewed(JSON.parse(storedHistory));
-    if (storedFavs) setFavorites(JSON.parse(storedFavs));
-    if (storedCart) setCart(JSON.parse(storedCart));
-  };
+  const {
+    favorites, viewedProducts,
+    addToCart, toggleFavorite, trackView
+  } = useEcommerce();
 
   useEffect(() => {
-    syncStorage();
-
-    // Listen for updates from Chatbot or other actions
-    window.addEventListener('storage-update', syncStorage);
-
     // Lấy dữ liệu từ API
     const fetchProducts = async () => {
       try {
@@ -41,57 +30,23 @@ export default function Ecosystem() {
     };
 
     fetchProducts();
-
-    return () => window.removeEventListener('storage-update', syncStorage);
   }, []);
 
-  const handleView = (product: any) => {
-    const currentHistory = JSON.parse(localStorage.getItem('chatbot_history') || '[]');
-    const isAlreadyViewed = currentHistory.some((p: any) => p.name === product.name);
-
-    if (!isAlreadyViewed) {
-      const newViewed = [product, ...currentHistory].slice(0, 10);
-      setViewed(newViewed);
-      localStorage.setItem('chatbot_history', JSON.stringify(newViewed));
-      window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `👀 Đang xem: ${product.name}` } }));
-      window.dispatchEvent(new Event('storage-update'));
-    }
+  const handleView = (product: Product) => {
+    trackView(product);
+    window.dispatchEvent(new CustomEvent('behavior-event', {
+      detail: { message: `👀 Đang xem: ${product.name}` }
+    }));
   };
 
-  const toggleFavorite = (e: React.MouseEvent, product: any) => {
+  const handleToggleFavorite = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
-    const isFav = favorites.some(p => p.name === product.name);
-    let newFavs;
-    if (isFav) {
-      newFavs = favorites.filter(p => p.name !== product.name);
-    } else {
-      newFavs = [...favorites, product];
-      window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `❤️ Đã lưu vào yêu thích: ${product.name}` } }));
-    }
-    setFavorites(newFavs);
-    localStorage.setItem('chatbot_favs', JSON.stringify(newFavs));
-    // Trigger event for Chatbot to sync
-    window.dispatchEvent(new Event('storage-update'));
+    toggleFavorite(product);
   };
 
-  const handleAddToCart = (e: React.MouseEvent, product: any) => {
+  const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation();
-    const storedCart = localStorage.getItem('chatbot_cart');
-    let currentCart = storedCart ? JSON.parse(storedCart) : [];
-
-    const existing = currentCart.find((item: any) => item.name === product.name);
-    if (existing) {
-      currentCart = currentCart.map((item: any) =>
-        item.name === product.name ? { ...item, quantity: item.quantity + 1 } : item
-      );
-    } else {
-      currentCart.push({ ...product, quantity: 1 });
-    }
-
-    setCart(currentCart);
-    localStorage.setItem('chatbot_cart', JSON.stringify(currentCart));
-    window.dispatchEvent(new CustomEvent('behavior-event', { detail: { message: `🛒 Đã thêm 1 x ${product.name} vào giỏ !` } }));
-    window.dispatchEvent(new Event('storage-update'));
+    addToCart(product);
   };
 
   if (loading) {
@@ -109,7 +64,7 @@ export default function Ecosystem() {
       {products.length > 0 ? (
         products.map((p) => {
           const isFav = favorites.some(f => f.name === p.name);
-          const isViewed = viewed.some(v => v.name === p.name);
+          const isViewed = viewedProducts.some(v => v.name === p.name);
 
           return (
             <div
@@ -130,7 +85,7 @@ export default function Ecosystem() {
                 {/* Actions Overlay */}
                 <div className="absolute top-4 right-4 flex flex-col gap-2">
                   <button
-                    onClick={(e) => toggleFavorite(e, p)}
+                    onClick={(e) => handleToggleFavorite(e, p)}
                     className={`w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md transition-all shadow-lg ${
                       isFav
                         ? 'bg-red-500 text-white'
@@ -158,9 +113,7 @@ export default function Ecosystem() {
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-slate-900 dark:text-white">
                     {p.price
-                      ? typeof p.price === 'number'
-                        ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price)
-                        : p.price
+                      ? new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.price)
                       : 'Liên hệ'}
                   </span>
                   <button
