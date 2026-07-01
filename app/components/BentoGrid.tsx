@@ -43,7 +43,7 @@ export default function BentoGrid() {
       {items.map((item, i) => (
         <div
           key={i}
-          className={`group relative overflow-hidden rounded-[2rem] bg-white dark:bg-[#0A0A15] border border-slate-200 dark:border-white/[0.05] p-10 transition-all duration-500 hover:border-slate-300 dark:hover:border-white/10 hover:shadow-xl dark:hover:bg-[#0D0D1A] ${item.size}`}
+          className={`group relative overflow-hidden rounded-[2rem] bg-white dark:bg-[#0A0A15] border border-slate-200 dark:border-white/[0.05] p-6 md:p-10 transition-all duration-500 hover:border-slate-300 dark:hover:border-white/10 hover:shadow-xl dark:hover:bg-[#0D0D1A] ${item.size}`}
         >
           {item.icon}
           <span className="inline-block text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3 bg-slate-100 dark:bg-white/5 py-1 px-3 rounded-full">

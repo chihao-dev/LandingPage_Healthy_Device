@@ -5,9 +5,13 @@ import Image from 'next/image';
 import { useEcommerce } from '@/hooks/useEcommerce';
 import { Product } from '@/lib/types';
 
-export default function Ecosystem() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+interface EcosystemProps {
+  initialProducts?: Product[];
+}
+
+export default function Ecosystem({ initialProducts = [] }: EcosystemProps) {
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [loading, setLoading] = useState(initialProducts.length === 0);
 
   const {
     favorites, viewedProducts,
@@ -15,22 +19,23 @@ export default function Ecosystem() {
   } = useEcommerce();
 
   useEffect(() => {
-    // Lấy dữ liệu từ API
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch('/api/products');
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        const data = await res.json();
-        setProducts(Array.isArray(data) ? data : []);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    // Nếu chưa có dữ liệu từ server thì mới fetch ở client
+    if (initialProducts.length === 0) {
+      const fetchProducts = async () => {
+        try {
+          const res = await fetch('/api/products');
+          if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+          const data = await res.json();
+          setProducts(Array.isArray(data) ? data : []);
+        } catch (error) {
+          console.error("Failed to fetch products:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
+    }
+  }, [initialProducts]);
 
   const handleView = (product: Product) => {
     trackView(product);

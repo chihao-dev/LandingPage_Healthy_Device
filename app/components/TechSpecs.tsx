@@ -36,8 +36,8 @@ export default function TechSpecs() {
             ['Kết nối & Cảm biến', 'Wi-Fi thông minh, Cảm biến điểm laser siêu nhạy'],
           ].map(([label, value], i) => (
             <tr key={i} className="border-b border-zinc-50 dark:border-zinc-700 last:border-0 hover:bg-blue-50/30 dark:hover:bg-blue-900/20 transition-colors">
-              <td className="py-6 px-8 font-bold text-zinc-500 dark:text-zinc-400 w-1/3 text-sm md:text-base">{label}</td>
-              <td className="py-6 px-8 text-zinc-900 dark:text-zinc-100 font-medium text-sm md:text-base">{value}</td>
+              <td className="py-4 md:py-6 px-4 md:px-8 font-bold text-zinc-500 dark:text-zinc-400 w-1/3 text-xs md:text-base">{label}</td>
+              <td className="py-4 md:py-6 px-4 md:px-8 text-zinc-900 dark:text-zinc-100 font-medium text-xs md:text-base">{value}</td>
             </tr>
           ))}
         </tbody>
