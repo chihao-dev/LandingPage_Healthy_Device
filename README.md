@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AirPure X - Landing Page Công Nghệ Sức Khỏe Thông Minh
 
-## Getting Started
+AirPure X là dự án Landing Page cao cấp giới thiệu giải pháp máy lọc không khí lượng tử tích hợp AI. Dự án tập trung vào tính thẩm mỹ, hiệu năng tối ưu và khả năng tích hợp dữ liệu thực tế.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tính Năng Nổi Bật
+
+### Giao Diện và Trải Nghiệm (UI/UX)
+- Thiết kế Hiện đại: Sử dụng ngôn ngữ thiết kế Glassmorphism, tối giản và sang trọng.
+- Scrollytelling và Parallax: Trải nghiệm cuộn trang kể chuyện kết hợp hiệu ứng chiều sâu, giúp truyền tải thông điệp sản phẩm ấn tượng.
+- Dark Mode: Hỗ trợ giao diện sáng/tối tùy chỉnh theo hệ điều hành.
+- Micro-interactions: Các hiệu ứng Particle (hạt bụi mịn), Skeleton Loading và thông báo (Toast) theo thời gian thực khi người dùng tương tác (click, scroll).
+- Responsive: Tương thích hoàn hảo trên mọi thiết bị (Desktop, Tablet, Mobile).
+
+### Tối Ưu Hiệu Năng và SEO
+- Performance: Đạt điểm số cao trên Google PageSpeed Insights nhờ tối ưu mã nguồn và sử dụng Next.js Server Components.
+- SEO Technical: Cấu hình đầy đủ thẻ Meta (Title, Description, Open Graph) giúp tối ưu hiển thị trên công cụ tìm kiếm và mạng xã hội.
+
+### Tính Năng Nâng Cao
+- Tích Hợp Backend (Supabase): 
+  - Lưu trữ thông tin khách hàng tiềm năng (Leads) trực tiếp vào Database.
+  - Tích hợp Supabase Auth để tự động gửi Email xác nhận cho người dùng ngay sau khi đăng ký thành công.
+- Mini Ecommerce: 
+  - Lưu sản phẩm yêu thích (Favorites).
+  - Quản lý giỏ hàng (Cart).
+  - Theo dõi danh sách sản phẩm đã xem (Recently Viewed).
+  - Dữ liệu được đồng bộ qua LocalStorage giúp trải nghiệm liền mạch.
+- AI Chatbot: Cửa sổ hỗ trợ trực tuyến tích hợp ở góc màn hình, tư vấn sản phẩm và điều hướng người dùng thông minh.
+
+---
+
+## Công Nghệ Sử Dụng
+
+- Framework: Next.js 14 (App Router)
+- Ngôn ngữ: TypeScript
+- Styling: Tailwind CSS
+- Animation: Framer Motion
+- Backend/Database: Supabase (Auth và Database)
+- Deployment: Vercel
+
+---
+
+## Cấu Trúc Dự Án
+
+```text
+├── app/
+│   ├── api/             # API Routes (Webhook, Products)
+│   ├── components/      # UI Components (Hero, Navbar, Form, Chatbot...)
+│   └── page.tsx         # Main Landing Page (Server Component)
+├── hooks/               # Custom Hooks (Ecommerce logic)
+├── lib/                 # Config (Supabase, Types)
+├── public/              # Images và Static Assets
+└── database.json        # Dữ liệu dự phòng Local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Cài Đặt và Khởi Chạy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone project:
+   ```bash
+   git clone https://github.com/your-username/AI-health-landing.git
+   cd AI-health-landing
+   ```
 
-## Learn More
+2. Cài đặt thư viện:
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Cấu hình biến môi trường (.env.local):
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+   NEXT_PUBLIC_SITE_URL=http://localhost:3000
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Chạy dự án:
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+**Dự án được thực hiện bởi ứng viên Vị trí Phát triển Website.**
